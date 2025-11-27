@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Admin - Automobile Discussion Forum</title>
+    <title>@yield('title', 'Automobile Discussion Forum')</title>
     <style>
         /* Light Theme */
         :root {
@@ -258,15 +258,28 @@
         .menu-icon {
             margin-right: var(--spacing-sm);
         }
+        
+        footer {
+            background-color: var(--gray-100);
+            padding: var(--spacing-lg);
+            text-align: center;
+            margin-top: var(--spacing-xl);
+            border-top: 1px solid var(--border);
+        }
     </style>
+    @yield('styles')
 </head>
 <body>
     <header class="header">
         <div class="container header-content">
-            <div class="logo">ADMIN PANEL</div>
+            <div class="logo">@yield('logo', 'AUTO DISCUSS')</div>
             <nav class="nav-links">
                 @auth
-                    <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                    @if(Auth::user()->email === 'rektech.uk@gmail.com')
+                        <a href="{{ route('admin.dashboard') }}">Admin Dashboard</a>
+                    @endif
+                    <a href="{{ route('discussion.index') }}">Discussion</a>
+                    @yield('header-nav-items')
                     <a href="{{ route('logout') }}" 
                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         Logout
@@ -275,40 +288,37 @@
                         @csrf
                     </form>
                 @else
-                    <a href="{{ route('admin.login') }}">Login</a>
+                    <a href="{{ route('login') }}">User Login</a>
+                    <a href="{{ route('admin.login') }}">Admin Login</a>
+                    <a href="{{ route('register') }}">Register</a>
                 @endauth
             </nav>
         </div>
     </header>
 
-    <div class="container" style="display: flex; gap: var(--spacing-lg);">
-        @auth
-        <aside class="sidebar" style="flex: 0 0 250px;">
-            <div class="sidebar-header">
-                Navigation Menu
+    <main class="container">
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
             </div>
-            <ul class="sidebar-menu">
-                <li><a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><span class="menu-icon">📊</span> Dashboard</a></li>
-                <li><a href="{{ route('admin.users') }}" class="{{ request()->routeIs('admin.users') ? 'active' : '' }}"><span class="menu-icon">👥</span> All Users</a></li>
-            </ul>
-        </aside>
-        @endauth
-        
-        <main style="flex: 1;">
-            @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
+        @endif
 
-            @if(session('error'))
-                <div class="alert alert-error">
-                    {{ session('error') }}
-                </div>
-            @endif
+        @if(session('error'))
+            <div class="alert alert-error">
+                {{ session('error') }}
+            </div>
+        @endif
 
-            @yield('admin-content')
-        </main>
-    </div>
+        @yield('content')
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; {{ date('Y') }} Automobile Discussion Forum. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    @yield('modals')
+    @yield('scripts')
 </body>
 </html>

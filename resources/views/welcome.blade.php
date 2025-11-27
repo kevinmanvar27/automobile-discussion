@@ -264,14 +264,17 @@
                             <path d="M67.41 125.402L44.5515 125.401L15.5625 75.1953L101.364 75.1985L233.886 304.712L170.942 304.71L67.41 125.402Z" fill="#4B0600"/>
                             <path d="M67.41 125.402L44.5515 125.401L15.5625 75.1953L101.364 75.1985L233.886 304.712L170.942 304.71L67.41 125.402Z" stroke="#FF750F" stroke-width="1"/>
                         </g>
-                    </svg>
-                    <div class="absolute inset-0 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]"></div>
-                </div>
-            </main>
-        </div>
+@extends('layouts.app')
 
-        @if (Route::has('login'))
-            <div class="h-14.5 hidden lg:block"></div>
-        @endif
-    </body>
-</html>
+@section('content')
+<div class="card">
+    <h1>Welcome to Automobile Discussion Forum</h1>
+    <p>Your one-stop platform for automobile discussions and networking.</p>
+    
+    <div style="margin-top: 20px;">
+        <a href="{{ route('login') }}" class="btn btn-primary">User Login</a>
+        <a href="{{ route('admin.login') }}" class="btn btn-secondary" style="margin-left: 10px;">Admin Login</a>
+        <a href="{{ route('register') }}" class="btn btn-outline" style="margin-left: 10px;">Register</a>
+    </div>
+</div>
+@endsection

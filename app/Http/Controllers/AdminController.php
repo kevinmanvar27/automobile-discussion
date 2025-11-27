@@ -63,6 +63,56 @@ class AdminController extends Controller
         return view('admin.users', compact('users'));
     }
 
+    public function viewUser(User $user)
+    {
+        // Return user data as JSON for AJAX requests
+        if (request()->wantsJson()) {
+            return response()->json($user);
+        }
+        
+        // For non-AJAX requests, redirect to users page
+        return redirect()->route('admin.users');
+    }
+
+    public function editUser(User $user)
+    {
+        // Return user data as JSON for AJAX requests
+        if (request()->wantsJson()) {
+            return response()->json($user);
+        }
+        
+        // For non-AJAX requests, redirect to users page
+        return redirect()->route('admin.users');
+    }
+
+    public function updateUser(Request $request, User $user)
+    {
+        // Validate the request
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'shop_name' => 'nullable|string|max:255',
+            'mobile_no' => 'nullable|string|max:20',
+            'city' => 'nullable|string|max:100',
+            'address' => 'nullable|string|max:500',
+            'verified' => 'boolean',
+        ]);
+
+        // Update user data
+        $user->update($request->only(['name', 'shop_name', 'mobile_no', 'city', 'address', 'verified']));
+
+        // Return JSON response for AJAX requests
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'User updated successfully.',
+                'user' => $user
+            ]);
+        }
+
+        // For non-AJAX requests, redirect back with success message
+        return back()->with('success', 'User updated successfully.');
+    }
+
     public function generatePassword(User $user)
     {
         // Generate a random password

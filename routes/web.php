@@ -21,6 +21,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth', App\Http\Middleware\EnsureAdminMiddleware::class])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('/users/{user}', [AdminController::class, 'viewUser'])->name('admin.users.view');
+    Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
+    Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update');
     Route::post('/generate-password/{user}', [AdminController::class, 'generatePassword'])->name('admin.generate-password');
 });
 
@@ -33,6 +36,9 @@ Route::middleware('auth')->group(function () {
         ->missing(function () {
             return redirect()->route('discussion.index')->with('error', 'Thread not found.');
         });
+    Route::get('/threads/{thread}/edit', [ThreadController::class, 'edit'])->name('threads.edit');
+    Route::put('/threads/{thread}', [ThreadController::class, 'update'])->name('threads.update');
     
     Route::post('/threads/{thread}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::put('/threads/{thread}/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
 });

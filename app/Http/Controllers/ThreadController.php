@@ -27,7 +27,7 @@ class ThreadController extends Controller
         // Check if user is authenticated
         if (!Auth::check()) {
             // If this is an AJAX request, return JSON error
-            if ($request->ajax()) {
+            if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => false,
                     'error' => 'You must be logged in to create a thread.'
@@ -50,7 +50,7 @@ class ThreadController extends Controller
             ]);
 
             // If this is an AJAX request, return JSON
-            if ($request->ajax()) {
+            if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => true,
                     'thread' => $thread
@@ -60,7 +60,7 @@ class ThreadController extends Controller
             return redirect()->route('threads.show', $thread)->with('success', 'Thread created successfully.');
         } catch (\Exception $e) {
             // If this is an AJAX request, return JSON error
-            if ($request->ajax()) {
+            if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => false,
                     'error' => $e->getMessage()
@@ -77,5 +77,78 @@ class ThreadController extends Controller
         $thread->load(['user', 'comments.user']);
         
         return view('threads.show', compact('thread'));
+    }
+    
+    public function edit(Thread $thread)
+    {
+        // Return thread data as JSON for AJAX requests
+        if (request()->wantsJson()) {
+            return response()->json($thread);
+        }
+        
+        // For non-AJAX requests, we might want to show an edit page
+        // But for this implementation, we're only using the modal approach
+        return abort(404);
+    }
+    
+    public function update(Request $request, Thread $thread)
+    {
+        // Check if user is authenticated
+        if (!Auth::check()) {
+            // If this is an AJAX request, return JSON error
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'You must be logged in to edit a thread.'
+                ], 401);
+            }
+            
+            return redirect()->route('login');
+        }
+        
+        // Check if the authenticated user owns the thread
+        if (Auth::id() !== $thread->user_id) {
+            // If this is an AJAX request, return JSON error
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'You are not authorized to edit this thread.'
+                ], 403);
+            }
+            
+            return back()->withErrors(['error' => 'You are not authorized to edit this thread.']);
+        }
+        
+        $request->validate([
+            'subject' => 'required|string|max:255',
+            'description' => 'required|string',
+        ]);
+        
+        try {
+            $thread->update([
+                'subject' => $request->subject,
+                'description' => $request->description,
+            ]);
+            
+            // If this is an AJAX request, return JSON
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'thread' => $thread
+                ]);
+            }
+            
+            return redirect()->route('discussion.index')->with('success', 'Thread updated successfully.');
+        } catch (\Exception $e) {
+            // If this is an AJAX request, return JSON error
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+            
+            return back()->withErrors(['error' => 'Error updating thread.']);
+        }
     }
 }
