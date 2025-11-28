@@ -2,7 +2,7 @@
 
 @section('header-nav-items')
     <!-- New Thread button in header -->
-    <a onclick="openThreadModal()" class="btn btn-primary btn-sm">New Thread</a>
+    <a onclick="openThreadModal()" href="#">New Thread</a>
 @endsection
 
 @section('modals')
@@ -14,7 +14,7 @@
                 <button type="button" class="close" onclick="closeThreadModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="threadForm">
+                <form id="threadForm" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <label for="subject" class="form-label">Subject</label>
@@ -24,6 +24,11 @@
                     <div class="form-group">
                         <label for="description" class="form-label">Description</label>
                         <textarea name="description" id="description" class="form-control" rows="5" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="images" class="form-label">Attach images (optional):</label>
+                        <input type="file" name="images[]" id="images" class="form-control" accept="image/*" multiple>
                     </div>
                     
                     <div class="d-flex justify-content-between">
@@ -38,29 +43,25 @@
 
 @section('scripts')
     <script>
-        // Open the modal
+        // Function to open the thread creation modal
         function openThreadModal() {
-            if (document.getElementById('threadModal')) {
-                document.getElementById('threadModal').style.display = 'block';
-            }
+            document.getElementById('threadModal').style.display = 'block';
         }
         
-        // Close the modal
+        // Function to close the thread creation modal
         function closeThreadModal() {
-            if (document.getElementById('threadModal')) {
-                document.getElementById('threadModal').style.display = 'none';
-            }
+            document.getElementById('threadModal').style.display = 'none';
         }
         
-        // Close the modal when clicking outside of it
-        window.onclick = function(event) {
+        // Close modal when clicking outside of it
+        window.addEventListener('click', function(event) {
             const modal = document.getElementById('threadModal');
-            if (modal && event.target == modal) {
-                modal.style.display = 'none';
+            if (event.target === modal) {
+                closeThreadModal();
             }
-        }
+        });
         
-        // Handle form submission
+        // Handle thread form submission
         document.addEventListener('DOMContentLoaded', function() {
             if (document.getElementById('threadForm')) {
                 document.getElementById('threadForm').addEventListener('submit', function(e) {

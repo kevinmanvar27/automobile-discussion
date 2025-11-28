@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Thread;
 use App\Models\Comment;
+use App\Models\CommentImage;
 
 class CommentController extends Controller
 {
@@ -27,29 +28,36 @@ class CommentController extends Controller
         
         $request->validate([
             'content' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
-            $imagePath = null;
-            
-            // Handle image upload
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('comment_images', 'public');
-            }
-
             $comment = Comment::create([
                 'user_id' => Auth::id(),
                 'thread_id' => $thread->id,
                 'content' => $request->content,
-                'image_path' => $imagePath,
             ]);
+            
+            // Handle multiple image uploads
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $imagePath = $image->store('comment_images', 'public');
+                    CommentImage::create([
+                        'comment_id' => $comment->id,
+                        'image_path' => $imagePath,
+                    ]);
+                }
+            }
 
             // Load the user relationship for the comment
             $comment->load('user');
 
             // If this is an AJAX request, return JSON
             if ($request->wantsJson() || $request->ajax()) {
+                // Load the images relationship for the comment
+                $comment->load('images');
+                
                 return response()->json([
                     'success' => true,
                     'comment' => $comment
@@ -117,7 +125,8 @@ class CommentController extends Controller
         
         $request->validate([
             'content' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         
         try {
@@ -126,24 +135,23 @@ class CommentController extends Controller
                 'content' => $request->content,
             ];
             
-            // Handle image upload if provided
-            if ($request->hasFile('image')) {
-                // Delete old image if exists
-                if ($comment->image_path) {
-                    Storage::disk('public')->delete($comment->image_path);
-                }
-                
-                // Store new image
-                $imagePath = $request->file('image')->store('comment_images', 'public');
-                $updateData['image_path'] = $imagePath;
-            }
-            
             $comment->update($updateData);
+            
+            // Handle multiple image uploads if provided
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $imagePath = $image->store('comment_images', 'public');
+                    CommentImage::create([
+                        'comment_id' => $comment->id,
+                        'image_path' => $imagePath,
+                    ]);
+                }
+            }
             
             // If this is an AJAX request, return JSON
             if ($request->wantsJson() || $request->ajax()) {
-                // Load the user relationship for the comment
-                $comment->load('user');
+                // Load the user and images relationships for the comment
+                $comment->load(['user', 'images']);
                 
                 return response()->json([
                     'success' => true,

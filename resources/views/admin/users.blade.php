@@ -30,8 +30,8 @@
                         <td>{{ $user->verified ? 'Yes' : 'No' }}</td>
                         <td>{{ $user->created_at->format('Y-m-d H:i') }}</td>
                         <td>
-                            <button class="admin-btn admin-btn-info admin-btn-sm view-user" data-user-id="{{ $user->id }}">View</button>
-                            <button class="admin-btn admin-btn-primary admin-btn-sm edit-user" data-user-id="{{ $user->id }}">Edit</button>
+                            <button class="admin-btn admin-btn-info admin-btn-sm view-user" data-user-id="{{ $user->id }}"><i class="fas fa-eye"></i></button>
+                            <button class="admin-btn admin-btn-primary admin-btn-sm edit-user" data-user-id="{{ $user->id }}"><i class="fas fa-pen"></i></button>
                             @if(!$user->verified)
                                 <form method="POST" action="{{ route('admin.generate-password', $user) }}" style="display: inline;">
                                     @csrf

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Half Star Rating Test</title>
+    <link rel="stylesheet" href="public/css/frontend.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .test-container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Half Star Rating Display Test</h1>
+    
+    <div class="test-container">
+        <h2>Full Stars (4.0)</h2>
+        <div class="star-rating-avg">
+            <span class="star full">★</span>
+            <span class="star full">★</span>
+            <span class="star full">★</span>
+            <span class="star full">★</span>
+            <span class="star empty">★</span>
+        </div>
+        <div class="rating-info">
+            <span class="rating-value">4.0</span>
+            <span class="rating-count">(5 ratings)</span>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>Half Star (3.5)</h2>
+        <div class="star-rating-avg">
+            <span class="star full">★</span>
+            <span class="star full">★</span>
+            <span class="star full">★</span>
+            <span class="star half">★</span>
+            <span class="star empty">★</span>
+        </div>
+        <div class="rating-info">
+            <span class="rating-value">3.5</span>
+            <span class="rating-count">(6 ratings)</span>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>Half Star (2.5)</h2>
+        <div class="star-rating-avg">
+            <span class="star full">★</span>
+            <span class="star full">★</span>
+            <span class="star half">★</span>
+            <span class="star empty">★</span>
+            <span class="star empty">★</span>
+        </div>
+        <div class="rating-info">
+            <span class="rating-value">2.5</span>
+            <span class="rating-count">(3 ratings)</span>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>No Ratings (0.0)</h2>
+        <div class="star-rating-avg">
+            <span class="star empty">★</span>
+            <span class="star empty">★</span>
+            <span class="star empty">★</span>
+            <span class="star empty">★</span>
+            <span class="star empty">★</span>
+        </div>
+        <div class="rating-info">
+            <span class="rating-value">0.0</span>
+            <span class="rating-count">(0 ratings)</span>
+        </div>
+    </div>
+</body>
+</html>

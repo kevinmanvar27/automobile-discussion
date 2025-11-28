@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ThreadImageController;
+use App\Http\Controllers\CommentImageController;
 use App\Http\Controllers\AdminController;
 
 // Public routes
@@ -13,6 +15,11 @@ Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('regi
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
+
+// Forgot Password Routes
+Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');
+
 Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -39,6 +46,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/threads/{thread}/edit', [ThreadController::class, 'edit'])->name('threads.edit');
     Route::put('/threads/{thread}', [ThreadController::class, 'update'])->name('threads.update');
     
+    // Thread rating route
+    Route::post('/threads/{thread}/rate', [ThreadController::class, 'rate'])->name('threads.rate');
+    
     Route::post('/threads/{thread}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::put('/threads/{thread}/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
+    
+    // Image deletion routes
+    Route::delete('/thread-images/{threadImage}', [ThreadImageController::class, 'destroy'])->name('thread-images.destroy');
+    Route::delete('/comment-images/{commentImage}', [CommentImageController::class, 'destroy'])->name('comment-images.destroy');
 });

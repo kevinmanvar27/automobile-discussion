@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Models\User;
+use App\Mail\UserPasswordMail;
 
 class AuthController extends Controller
 {
@@ -99,5 +101,36 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    public function showForgotPasswordForm()
+    {
+        return view('auth.forgot-password');
+    }
+
+    public function sendResetLinkEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email'
+        ]);
+
+        // Find the user
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return back()->withErrors(['email' => 'No user found with this email address.']);
+        }
+
+        // Generate a new secure password
+        $newPassword = Str::random(12);
+        
+        // Update user's password
+        $user->password = Hash::make($newPassword);
+        $user->save();
+
+        // Send the email with the new password
+        Mail::to($user->email)->send(new UserPasswordMail($user, $newPassword));
+
+        return back()->with('success', 'Password reset link sent to your email address.');
     }
 }

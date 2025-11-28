@@ -333,6 +333,76 @@ body {
     font-size: var(--font-size-sm);
 }
 
+/* Star Rating */
+.rating-container {
+    text-align: center;
+    padding: var(--spacer-sm) 0;
+}
+
+.star-rating {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    margin-bottom: var(--spacer-xs);
+}
+
+.star {
+    font-size: 1.2rem;
+    color: var(--gray-300);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.star:hover,
+.star.active,
+.star.selected {
+    color: var(--primary);
+}
+
+/* New styles for average rating display */
+.star-rating-avg .star {
+    font-size: 1rem;
+    cursor: default;
+    position: relative;
+}
+
+.star-rating-avg .star.full {
+    color: var(--primary);
+}
+
+.star-rating-avg .star.half {
+    color: var(--gray-300);
+}
+
+.star-rating-avg .star.half::after {
+    content: '\2605';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    overflow: hidden;
+    color: var(--primary);
+}
+
+.rating-info {
+    font-size: var(--font-size-xs);
+    color: var(--gray-600);
+}
+
+.rating-value {
+    font-weight: bold;
+    color: var(--dark);
+}
+
+.rating-text {
+    font-size: var(--font-size-xs);
+    color: var(--gray-600);
+}
+
+.star-rating-display {
+    margin-bottom: 10px;
+}
+
 /* Comments */
 .comment {
     border-left: 3px solid var(--primary);
@@ -565,6 +635,41 @@ body {
 
 .w-100 {
     width: 100%;
+}
+
+/* Pagination */
+.pagination {
+    margin-bottom: 0;
+}
+
+.page-link {
+    color: var(--primary);
+    background-color: var(--white);
+    border-color: var(--gray-300);
+    transition: var(--transition-base);
+}
+
+.page-link:hover {
+    color: var(--white);
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.page-link:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 107, 0, 0.25);
+    outline: 0;
+}
+
+.page-item.active .page-link {
+    color: var(--white);
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.page-item.disabled .page-link {
+    color: var(--gray-500);
+    background-color: var(--white);
+    border-color: var(--gray-300);
 }
 
 /* Responsive adjustments */

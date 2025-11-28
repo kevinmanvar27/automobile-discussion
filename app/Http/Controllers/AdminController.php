@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
+use App\Models\Thread;
+use App\Models\Comment;
+use App\Mail\UserPasswordMail;
 
 class AdminController extends Controller
 {
@@ -49,40 +52,44 @@ class AdminController extends Controller
 
     public function dashboard()
     {
-        // Get all unverified users
-        $users = User::where('verified', false)->get();
+        // Get all unverified users (pending verification)
+        $pendingUsers = User::where('verified', false)->orderBy('created_at', 'asc')->get();
         
-        return view('admin.dashboard', compact('users'));
+        // Get recent threads
+        $recentThreads = Thread::with('user')->latest()->take(5)->get();
+        
+        // Get recent comments
+        $recentComments = Comment::with(['user', 'thread'])->latest()->take(5)->get();
+        
+        // Get statistics
+        $totalUsers = User::count();
+        $totalThreads = Thread::count();
+        $totalComments = Comment::count();
+        $verifiedUsers = User::where('verified', true)->count();
+        
+        return view('admin.dashboard', compact('pendingUsers', 'recentThreads', 'recentComments', 'totalUsers', 'totalThreads', 'totalComments', 'verifiedUsers'));
     }
 
     public function users()
     {
-        // Get all users
-        $users = User::all();
-        
+        $users = User::orderBy('created_at', 'desc')->get();
         return view('admin.users', compact('users'));
     }
 
     public function viewUser(User $user)
     {
-        // Return user data as JSON for AJAX requests
-        if (request()->wantsJson()) {
-            return response()->json($user);
-        }
-        
-        // For non-AJAX requests, redirect to users page
-        return redirect()->route('admin.users');
+        return response()->json([
+            'success' => true,
+            'user' => $user
+        ]);
     }
 
     public function editUser(User $user)
     {
-        // Return user data as JSON for AJAX requests
-        if (request()->wantsJson()) {
-            return response()->json($user);
-        }
-        
-        // For non-AJAX requests, redirect to users page
-        return redirect()->route('admin.users');
+        return response()->json([
+            'success' => true,
+            'user' => $user
+        ]);
     }
 
     public function updateUser(Request $request, User $user)
@@ -125,8 +132,8 @@ class AdminController extends Controller
             'verified' => true
         ]);
         
-        // In a real application, you would send an actual email
-        // Mail::to($user->email)->send(new UserPasswordMail($user, $password));
+        // Send email with the generated password
+        Mail::to($user->email)->send(new UserPasswordMail($user, $password));
         
         return back()->with('success', 'Password generated and email sent to user.');
     }

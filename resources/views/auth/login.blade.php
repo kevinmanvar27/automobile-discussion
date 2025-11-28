@@ -30,6 +30,10 @@
             <button type="submit" class="btn btn-primary btn-lg flex-grow-1 flex-md-grow-0">Login</button>
             <a href="{{ route('admin.login') }}" class="btn btn-link">Admin Login</a>
         </div>
+        
+        <div class="text-center mt-3">
+            <a href="{{ route('password.request') }}">Forgot Password?</a>
+        </div>
     </form>
     
     <div class="text-center mt-4">

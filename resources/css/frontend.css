@@ -369,6 +369,19 @@ body {
     font-size: var(--font-size-sm);
 }
 
+/* Search Form */
+.search-form {
+    margin-bottom: var(--spacer-md);
+}
+
+.search-form .form-control {
+    border-radius: var(--border-radius-sm) 0 0 var(--border-radius-sm);
+}
+
+.search-form .btn {
+    border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+}
+
 /* Comments */
 .comment {
     border-left: 3px solid var(--primary);
@@ -756,6 +769,41 @@ body {
     .d-md-grid {
         display: grid;
     }
+}
+
+/* Pagination */
+.pagination {
+    margin-bottom: 0;
+}
+
+.page-link {
+    color: var(--primary);
+    background-color: var(--white);
+    border-color: var(--gray-300);
+    transition: var(--transition-base);
+}
+
+.page-link:hover {
+    color: var(--white);
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.page-link:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 107, 0, 0.25);
+    outline: 0;
+}
+
+.page-item.active .page-link {
+    color: var(--white);
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.page-item.disabled .page-link {
+    color: var(--gray-500);
+    background-color: var(--white);
+    border-color: var(--gray-300);
 }
 
 /* Additional responsive utilities */

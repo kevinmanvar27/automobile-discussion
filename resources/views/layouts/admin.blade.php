@@ -7,6 +7,8 @@
     <title>Admin - Automobile Discussion Forum</title>
     <!-- Include the custom admin CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
     <style>
         /* Additional styles that need to be inline */
@@ -34,7 +36,7 @@
     <div class="admin-container">
         @auth
         <aside class="admin-sidebar">
-            <div class="admin-sidebar-header">
+            <div class="admin-sidebar-header justify-content-center">
                 <a href="{{ route('admin.dashboard') }}" class="logo">
                     <img src="{{ asset('images/car-tech.png') }}" alt="Auto Discuss Logo" class="logo-img">
                 </a>
@@ -57,6 +59,7 @@
                         <a href="{{ route('admin.dashboard') }}" class="admin-logo">ADMIN PANEL</a>
                         <nav class="admin-nav-links">
                             @auth
+                                <a href="{{ route('home') }}">Frontend</a>
                                 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                                 <a href="{{ route('logout') }}" 
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -94,6 +97,8 @@
         @csrf
     </form>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
 </body>
 </html>
