@@ -1,31 +1,67 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('content')
-<div class="card">
-    <h1>Admin Login</h1>
-    
-    <form method="POST" action="{{ route('admin.login') }}">
-        @csrf
-        
-        <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required>
-            @error('email')
-                <div class="alert alert-error">{{ $message }}</div>
-            @enderror
+@section('admin-content')
+<div class="d-flex align-items-center justify-content-center min-vh-100">
+    <div class="card mx-auto" style="width: 500px !important;">
+        <!-- Header -->
+        <div class="admin-card-header">
+            <h1 class="admin-card-title text-center mb-0">Admin Login</h1>
         </div>
-        
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" class="form-control" required>
-            @error('password')
-                <div class="alert alert-error">{{ $message }}</div>
-            @enderror
+
+        <!-- Body -->
+        <div class="admin-card-body">
+            <form method="POST" action="{{ route('admin.login') }}">
+                @csrf
+
+                <!-- Email -->
+                <div class="admin-form-group">
+                    <label for="email" class="admin-form-label">Email Address</label>
+                    <input 
+                        type="email" 
+                        name="email" 
+                        id="email" 
+                        class="admin-form-control" 
+                        value="{{ old('email') }}" 
+                        required
+                    >
+                    @error('email')
+                        <div class="admin-alert admin-alert-error mt-2">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Password -->
+                <div class="admin-form-group">
+                    <label for="password" class="admin-form-label">Password</label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        id="password" 
+                        class="admin-form-control" 
+                        required
+                    >
+                    @error('password')
+                        <div class="admin-alert admin-alert-error mt-2">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Submit -->
+                <div class="d-grid mt-4">
+                    <button type="submit" class="admin-btn admin-btn-primary admin-btn-lg">
+                        Admin Login
+                    </button>
+                </div>
+            </form>
+
+            <!-- User Login Link -->
+            <div class="text-center mt-4">
+                <p>
+                    <a href="{{ route('login') }}" class="admin-btn admin-btn-link">
+                        User Login
+                    </a>
+                </p>
+            </div>
         </div>
-        
-        <button type="submit" class="btn btn-primary">Admin Login</button>
-    </form>
-    
-    <p><a href="{{ route('login') }}">User Login</a></p>
+    </div>
 </div>
+
 @endsection

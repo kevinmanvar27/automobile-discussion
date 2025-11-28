@@ -14,7 +14,8 @@ class Comment extends Model
     protected $fillable = [
         'user_id',
         'thread_id',
-        'content'
+        'content',
+        'image_path'
     ];
 
     public function user()

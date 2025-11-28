@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Thread;
 use App\Models\Comment;
 
@@ -26,13 +27,22 @@ class CommentController extends Controller
         
         $request->validate([
             'content' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
+            $imagePath = null;
+            
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('comment_images', 'public');
+            }
+
             $comment = Comment::create([
                 'user_id' => Auth::id(),
                 'thread_id' => $thread->id,
                 'content' => $request->content,
+                'image_path' => $imagePath,
             ]);
 
             // Load the user relationship for the comment
@@ -107,12 +117,28 @@ class CommentController extends Controller
         
         $request->validate([
             'content' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         
         try {
-            $comment->update([
+            // Prepare update data
+            $updateData = [
                 'content' => $request->content,
-            ]);
+            ];
+            
+            // Handle image upload if provided
+            if ($request->hasFile('image')) {
+                // Delete old image if exists
+                if ($comment->image_path) {
+                    Storage::disk('public')->delete($comment->image_path);
+                }
+                
+                // Store new image
+                $imagePath = $request->file('image')->store('comment_images', 'public');
+                $updateData['image_path'] = $imagePath;
+            }
+            
+            $comment->update($updateData);
             
             // If this is an AJAX request, return JSON
             if ($request->wantsJson() || $request->ajax()) {
