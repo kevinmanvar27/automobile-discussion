@@ -610,25 +610,25 @@
             let threadsHtml = '';
             threads.forEach(thread => {
                 // Create images HTML if thread has images
-                let imagesHtml = '';
+                let threadImagesHtml = '';
                 if (thread.images && thread.images.length > 0) {
-                    imagesHtml = '<div class="thread-images mt-2">';
+                    threadImagesHtml = '<div class="thread-images mt-2">';
                     const imagesToShow = thread.images.slice(0, 3);
                     imagesToShow.forEach(image => {
-                        imagesHtml += `<img src="/storage/${image.image_path}" alt="Thread Image" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover; margin-right: 5px;">`;
+                        threadImagesHtml += `<img src="/storage/${image.image_path}" alt="Thread Image" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover; margin-right: 5px;">`;
                     });
                     if (thread.images.length > 3) {
-                        imagesHtml += `<span class="badge bg-secondary">+${thread.images.length - 3} more</span>`;
+                        threadImagesHtml += `<span class="badge bg-secondary">+${thread.images.length - 3} more</span>`;
                     }
-                    imagesHtml += '</div>';
+                    threadImagesHtml += '</div>';
                 }
                 
                 // Check if current user can edit this thread
-                const canEdit = thread.user_id == document.querySelector('meta[name="user-id"]')?.getAttribute('content');
+                const userCanEdit = thread.user_id == document.querySelector('meta[name="user-id"]')?.getAttribute('content');
                 
                 // Format date
-                const createdAt = new Date(thread.created_at);
-                const formattedDate = createdAt.toLocaleDateString('en-US', { 
+                const threadCreatedAt = new Date(thread.created_at);
+                const threadFormattedDate = threadCreatedAt.toLocaleDateString('en-US', { 
                     month: 'short', 
                     day: 'numeric', 
                     year: 'numeric',
@@ -637,52 +637,78 @@
                 });
                 
                 // Create comment count text
-                const commentText = `${thread.comments_count} ${thread.comments_count === 1 ? 'comment' : 'comments'}`;
+                const threadCommentText = `${thread.comments_count} ${thread.comments_count === 1 ? 'comment' : 'comments'}`;
+                
+                // Calculate average rating
+                const averageRating = parseFloat(thread.average_rating) || 0;
+                const roundedRating = Math.round(averageRating * 10) / 10; // Round to 1 decimal place
+                const fullStars = Math.floor(roundedRating);
+                const hasHalfStar = (roundedRating - fullStars) >= 0.5;
+                const ratingCount = thread.ratings_count || 0;
+                
+                // Create star rating display
+                let starRatingHtml = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= fullStars) {
+                        starRatingHtml += '<span class="star full">&#9733;</span>';
+                    } else if (i == fullStars + 1 && hasHalfStar) {
+                        starRatingHtml += '<span class="star half">&#9733;</span>';
+                    } else {
+                        starRatingHtml += '<span class="star empty">&#9733;</span>';
+                    }
+                }
+                
+                // Create user rating input (if authenticated)
+                let userRatingHtml = '';
+                const isAuthenticated = !!document.querySelector('meta[name="user-id"]');
+                if (isAuthenticated) {
+                    const userRating = thread.user_rating || 0;
+                    let starsHtml = '';
+                    for (let i = 1; i <= 5; i++) {
+                        starsHtml += `<span class="star ${userRating && i <= userRating ? 'selected' : ''}" data-rating="${i}">&#9733;</span>`;
+                    }
+                    const ratingText = userRating > 0 ? `You rated: ${userRating} star${userRating !== 1 ? 's' : ''}` : 'Rate this thread';
+                    
+                    userRatingHtml = `
+                        <div class="star-rating-input mt-2">
+                            <div class="star-rating">
+                                ${starsHtml}
+                            </div>
+                            <div class="rating-text">${ratingText}</div>
+                        </div>
+                    `;
+                }
                 
                 threadsHtml += `
                     <li class="thread-item d-flex justify-content-between align-items-center" id="thread-${thread.id}">
                         <div class="col-8 thread-left">
                             <a href="/threads/${thread.id}" class="thread-title">${thread.subject}</a>
-                            ${imagesHtml}
+                            ${threadImagesHtml}
                             <div class="thread-meta">
                                 By ${thread.user.name} | 
-                                ${formattedDate}
+                                ${threadFormattedDate}
+                                ${userCanEdit ? 
+                                    `<button class="btn btn-sm btn btn-primary edit-thread-btn" data-thread-id="${thread.id}" style="margin-left: 10px;">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>` : ''}
                             </div>
                         </div>
                         <div class="col-2 thread-center">
                             <div class="rating-container" data-thread-id="${thread.id}">
                                 <div class="star-rating-display">
                                     <div class="star-rating-avg">
-                                        <span class="star empty">&#9733;</span>
-                                        <span class="star empty">&#9733;</span>
-                                        <span class="star empty">&#9733;</span>
-                                        <span class="star empty">&#9733;</span>
-                                        <span class="star empty">&#9733;</span>
+                                        ${starRatingHtml}
                                     </div>
                                     <div class="rating-info">
-                                        <span class="rating-value">0.0</span>
-                                        <span class="rating-count">(0 ratings)</span>
+                                        <span class="rating-value">${roundedRating.toFixed(1)}</span>
+                                        <span class="rating-count">(${ratingCount} ${ratingCount === 1 ? 'rating' : 'ratings'})</span>
                                     </div>
                                 </div>
-                                
-                                <div class="star-rating-input mt-2">
-                                    <div class="star-rating">
-                                        <span class="star" data-rating="1">&#9733;</span>
-                                        <span class="star" data-rating="2">&#9733;</span>
-                                        <span class="star" data-rating="3">&#9733;</span>
-                                        <span class="star" data-rating="4">&#9733;</span>
-                                        <span class="star" data-rating="5">&#9733;</span>
-                                    </div>
-                                    <div class="rating-text">Rate this thread</div>
-                                </div>
+                                ${userRatingHtml}
                             </div>
                         </div>
                         <div class="col-2 thread-right">
-                            (${commentText})
-                            ${canEdit ? 
-                                `<button class="btn btn-sm btn btn-primary edit-thread-btn" data-thread-id="${thread.id}" style="margin-left: 10px;">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </button>` : ''}
+                            (${threadCommentText})
                         </div>
                     </li>
                 `;

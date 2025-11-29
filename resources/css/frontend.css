@@ -369,6 +369,20 @@ body {
     font-size: var(--font-size-sm);
 }
 
+/* Thread item columns */
+.thread-left, .thread-center, .thread-right {
+    padding: 0 var(--spacer-sm);
+}
+
+.thread-left {
+    flex: 1;
+}
+
+.thread-center, .thread-right {
+    text-align: center;
+    flex-shrink: 0;
+}
+
 /* Search Form */
 .search-form {
     margin-bottom: var(--spacer-md);
@@ -394,6 +408,11 @@ body {
 .comment-content {
     margin-top: var(--spacer-sm);
     line-height: var(--line-height-base);
+}
+
+.image-container {
+    margin-right: var(--spacer-sm);
+    margin-bottom: var(--spacer-sm);
 }
 
 /* Modals */
@@ -806,6 +825,35 @@ body {
     border-color: var(--gray-300);
 }
 
+/* Star Rating Component Styles */
+.star {
+    font-size: 1.2rem;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    -webkit-text-stroke: 1px #ccc;
+    text-shadow: 0 0 1px rgba(0,0,0,0.1);
+}
+
+.star.full, .star.selected {
+    color: #FF6B00;
+    -webkit-text-stroke: 0;
+}
+
+.star.half {
+    color: #FF6B00;
+    -webkit-text-stroke: 0;
+}
+
+.star.active {
+    color: #FF6B00;
+    -webkit-text-stroke: 0;
+}
+
+.star.empty {
+    color: #ddd;
+}
+
 /* Additional responsive utilities */
 @media (max-width: 575.98px) {
     .px-0-mobile {
@@ -816,5 +864,188 @@ body {
     .py-2-mobile {
         padding-top: var(--spacer-md);
         padding-bottom: var(--spacer-md);
+    }
+    
+    /* Extra small device adjustments */
+    .btn {
+        padding: var(--spacer-xs) var(--spacer-sm);
+        font-size: var(--font-size-sm);
+    }
+    
+    .form-control {
+        padding: var(--spacer-xs) var(--spacer-sm);
+        font-size: var(--font-size-sm);
+    }
+    
+    .card-header, .card-body {
+        padding: var(--spacer-sm);
+    }
+    
+    .thread-item {
+        padding: var(--spacer-xs);
+    }
+}
+
+/* Discussion Forum Responsive Adjustments */
+@media (max-width: 767.98px) {
+    /* Thread list items */
+    .thread-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: var(--spacer-sm);
+    }
+    
+    .thread-left, .thread-center, .thread-right {
+        width: 100%;
+        padding: var(--spacer-xs) 0;
+        text-align: left;
+    }
+    
+    .thread-center, .thread-right {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid var(--gray-200);
+        margin-top: var(--spacer-sm);
+        padding-top: var(--spacer-sm);
+    }
+    
+    .thread-center {
+        order: 2;
+    }
+    
+    .thread-right {
+        order: 3;
+    }
+    
+    .thread-meta {
+        margin-top: var(--spacer-xs);
+    }
+    
+    .rating-container {
+        width: 100%;
+    }
+    
+    .star-rating-avg, .star-rating-input {
+        display: inline-block;
+        margin-right: var(--spacer-md);
+    }
+    
+    .rating-info {
+        display: inline-block;
+    }
+    
+    .thread-images {
+        margin-top: var(--spacer-sm);
+    }
+    
+    .thread-images img {
+        width: 40px;
+        height: 40px;
+    }
+    
+    /* Card adjustments */
+    .card-header, .card-body {
+        padding: var(--spacer-md) var(--spacer-sm);
+    }
+    
+    /* Search form adjustments */
+    .search-form .input-group {
+        flex-direction: column;
+    }
+    
+    .search-form .form-control {
+        border-radius: var(--border-radius-sm);
+        margin-bottom: var(--spacer-xs);
+    }
+    
+    .search-form .btn {
+        border-radius: var(--border-radius-sm);
+    }
+    
+    /* Header adjustments */
+    .card-header {
+        flex-direction: column;
+        gap: var(--spacer-sm);
+    }
+    
+    .card-title {
+        text-align: center;
+        margin-bottom: var(--spacer-sm);
+    }
+    
+    /* Thread detail page adjustments */
+    .comment {
+        padding: var(--spacer-sm);
+    }
+    
+    .comment-content {
+        margin-top: var(--spacer-xs);
+    }
+    
+    .image-container img {
+        max-width: 80px;
+    }
+    
+    /* Comment form adjustments */
+    #commentForm .form-group {
+        margin-bottom: var(--spacer-sm);
+    }
+    
+    #commentForm textarea {
+        min-height: 100px;
+    }
+    
+    /* Authentication form adjustments */
+    .auth-form-card {
+        margin: var(--spacer-sm);
+        max-width: none;
+    }
+    
+    .form-control-lg {
+        padding: var(--spacer-sm);
+        font-size: var(--font-size-md);
+    }
+    
+    .btn-lg {
+        padding: var(--spacer-sm) var(--spacer-md);
+        font-size: var(--font-size-md);
+    }
+    
+    .row {
+        flex-direction: column;
+    }
+    
+    .col-md-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: var(--spacer-md);
+    }
+    
+    /* Alert adjustments */
+    .alert {
+        padding: var(--spacer-sm);
+    }
+    
+    /* Modal adjustments */
+    .modal-content {
+        margin: var(--spacer-sm);
+        max-width: none;
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: var(--spacer-md);
+    }
+    
+    .modal-title {
+        font-size: var(--font-size-lg);
+    }
+    
+    .close {
+        width: 24px;
+        height: 24px;
+        font-size: var(--font-size-lg);
     }
 }

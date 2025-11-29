@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Rating Test</title>
+    <link rel="stylesheet" href="public/css/frontend.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .test-container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: white;
+            border-radius: 5px;
+        }
+        h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        .star-rating {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Star Rating Component Test</h1>
+    
+    <div class="test-container">
+        <h2>Interactive Star Rating</h2>
+        <div class="star-rating">
+            <span class="star" data-rating="1">&#9733;</span>
+            <span class="star" data-rating="2">&#9733;</span>
+            <span class="star" data-rating="3">&#9733;</span>
+            <span class="star" data-rating="4">&#9733;</span>
+            <span class="star" data-rating="5">&#9733;</span>
+        </div>
+        <div class="rating-text">Rate this item</div>
+    </div>
+    
+    <div class="test-container">
+        <h2>Display Only - Full Stars (4.0)</h2>
+        <div class="star-rating-avg">
+            <span class="star full">&#9733;</span>
+            <span class="star full">&#9733;</span>
+            <span class="star full">&#9733;</span>
+            <span class="star full">&#9733;</span>
+            <span class="star empty">&#9733;</span>
+        </div>
+        <div class="rating-info">
+            <span class="rating-value">4.0</span>
+            <span class="rating-count">(5 ratings)</span>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>Display Only - Half Star (3.5)</h2>
+        <div class="star-rating-avg">
+            <span class="star full">&#9733;</span>
+            <span class="star full">&#9733;</span>
+            <span class="star full">&#9733;</span>
+            <span class="star half">&#9733;</span>
+            <span class="star empty">&#9733;</span>
+        </div>
+        <div class="rating-info">
+            <span class="rating-value">3.5</span>
+            <span class="rating-count">(6 ratings)</span>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>Display Only - Selected Rating (2 stars)</h2>
+        <div class="star-rating-avg">
+            <span class="star selected">&#9733;</span>
+            <span class="star selected">&#9733;</span>
+            <span class="star empty">&#9733;</span>
+            <span class="star empty">&#9733;</span>
+            <span class="star empty">&#9733;</span>
+        </div>
+        <div class="rating-info">
+            <span class="rating-value">2.0</span>
+            <span class="rating-count">(3 ratings)</span>
+        </div>
+    </div>
+
+    <script>
+        // Simple hover and click functionality for testing
+        document.querySelectorAll('.star-rating').forEach(ratingContainer => {
+            const stars = ratingContainer.querySelectorAll('.star');
+            
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = parseInt(this.dataset.rating);
+                    highlightStars(stars, rating);
+                    
+                    // Update rating text
+                    const ratingText = this.parentNode.nextElementSibling;
+                    ratingText.textContent = `You rated: ${rating} star${rating !== 1 ? 's' : ''}`;
+                });
+                
+                star.addEventListener('mouseover', function() {
+                    const rating = parseInt(this.dataset.rating);
+                    highlightStars(stars, rating, true);
+                });
+                
+                star.addEventListener('mouseout', function() {
+                    // Reset to current rating
+                    const currentRating = getCurrentRating(stars);
+                    if (currentRating > 0) {
+                        highlightStars(stars, currentRating);
+                    } else {
+                        // Remove all highlights if no current rating
+                        stars.forEach(s => s.classList.remove('active', 'selected'));
+                    }
+                });
+            });
+        });
+        
+        function getCurrentRating(stars) {
+            for (let i = stars.length - 1; i >= 0; i--) {
+                if (stars[i].classList.contains('selected')) {
+                    return i + 1;
+                }
+            }
+            return 0;
+        }
+        
+        function highlightStars(stars, rating, isHover = false) {
+            stars.forEach((star, index) => {
+                // HOVER MODE
+                if (isHover) {
+                    // Remove only hover highlight
+                    star.classList.remove('active');
+                    
+                    // Add active only to hovered range
+                    if (index < rating) {
+                        star.classList.add('active');
+                    }
+                    return; // prevent touching selected class
+                }
+                
+                // CLICK MODE (real selection)
+                if (index < rating) {
+                    star.classList.add('selected');
+                } else {
+                    star.classList.remove('selected');
+                }
+                
+                // clean active from previous hover
+                star.classList.remove('active');
+            });
+        }
+    </script>
+</body>
+</html>

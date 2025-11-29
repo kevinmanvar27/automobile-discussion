@@ -27,22 +27,32 @@ class ThreadController extends Controller
         
         $threads = $query->paginate(25);
         
-        // Add average rating to each thread
+        // Add average rating and user rating to each thread
         foreach ($threads as $thread) {
             $thread->average_rating = $thread->averageRating;
             // Get user's rating if authenticated
             if (Auth::check()) {
                 $userRating = $thread->ratings->where('user_id', Auth::id())->first();
-                $thread->user_rating = $userRating ? $userRating->rating : 0;
+                $thread->setUserRating($userRating ? $userRating->rating : 0);
             } else {
-                $thread->user_rating = 0;
+                $thread->setUserRating(0);
             }
         }
         
         // Return JSON response for AJAX requests
         if ($request->ajax() || $request->has('ajax')) {
+            // Convert threads to array and add user_rating to each thread
+            $threadsArray = [];
+            foreach ($threads->items() as $thread) {
+                $threadArray = $thread->toArray();
+                $threadArray['user_rating'] = $thread->user_rating;
+                $threadArray['average_rating'] = $thread->average_rating;
+                $threadArray['ratings_count'] = $thread->ratings->count();
+                $threadsArray[] = $threadArray;
+            }
+            
             return response()->json([
-                'threads' => $threads->items(),
+                'threads' => $threadsArray,
                 'pagination' => [
                     'current_page' => $threads->currentPage(),
                     'last_page' => $threads->lastPage(),
@@ -143,9 +153,9 @@ class ThreadController extends Controller
         // Get user's rating if authenticated
         if (Auth::check()) {
             $userRating = $thread->ratings->where('user_id', Auth::id())->first();
-            $thread->user_rating = $userRating ? $userRating->rating : 0;
+            $thread->setUserRating($userRating ? $userRating->rating : 0);
         } else {
-            $thread->user_rating = 0;
+            $thread->setUserRating(0);
         }
         
         return view('threads.show', compact('thread'));

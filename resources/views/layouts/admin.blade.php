@@ -34,12 +34,21 @@
 </head>
 <body>
     <div class="admin-container">
+        <!-- Mobile sidebar toggle button -->
+        <button class="sidebar-toggle" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
         @auth
-        <aside class="admin-sidebar">
+        <aside class="admin-sidebar" id="adminSidebar">
             <div class="admin-sidebar-header justify-content-center">
                 <a href="{{ route('admin.dashboard') }}" class="logo">
                     <img src="{{ asset('images/car-tech.png') }}" alt="Auto Discuss Logo" class="logo-img">
                 </a>
+                <!-- Close button for mobile sidebar -->
+                <button class="sidebar-toggle-close" id="sidebarClose">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <ul class="admin-sidebar-menu">
                 <li><a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><span class="menu-icon">📊</span> Dashboard</a></li>
@@ -50,9 +59,9 @@
         
         @php
             $classHeader = Auth::user() ? 'admin-header' : 'd-none';
-            $classMainCss = Auth::user() ? 'margin-left:250px;' : 'margin-left:0px;';
+            $mainClass = Auth::user() ? 'admin-main authenticated' : 'admin-main';
         @endphp
-        <main class="admin-main" style="<?php echo $classMainCss; ?>">
+        <main class="{{ $mainClass }}">
             @auth
                 <header class=" {{ $classHeader }}">
                     <div class="admin-header-content">
@@ -100,5 +109,36 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    
+    <!-- Sidebar toggle script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebarClose = document.getElementById('sidebarClose');
+            const adminSidebar = document.getElementById('adminSidebar');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    adminSidebar.classList.add('active');
+                });
+            }
+            
+            if (sidebarClose) {
+                sidebarClose.addEventListener('click', function() {
+                    adminSidebar.classList.remove('active');
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                const isClickInsideSidebar = adminSidebar.contains(event.target);
+                const isClickOnToggle = sidebarToggle && sidebarToggle.contains(event.target);
+                
+                if (!isClickInsideSidebar && !isClickOnToggle && adminSidebar.classList.contains('active')) {
+                    adminSidebar.classList.remove('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

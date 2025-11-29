@@ -607,4 +607,44 @@ body {
     .admin-nav-links a {
         margin: 0 var(--admin-spacer-sm);
     }
+    
+    /* Admin table responsive adjustments */
+    .admin-table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .admin-table th,
+    .admin-table td {
+        white-space: nowrap;
+    }
+    
+    /* Admin card adjustments */
+    .admin-card-header,
+    .admin-card-body {
+        padding: var(--admin-spacer-md);
+    }
+    
+    .admin-stat-card {
+        padding: var(--admin-spacer-md);
+    }
+    
+    .admin-stat-number {
+        font-size: var(--admin-font-size-xxl);
+    }
+    
+    /* Form adjustments */
+    .admin-form-control {
+        font-size: var(--admin-font-size-sm);
+    }
+    
+    .admin-btn {
+        padding: var(--admin-spacer-xs) var(--admin-spacer-sm);
+        font-size: var(--admin-font-size-sm);
+    }
+    
+    .admin-btn-lg {
+        padding: var(--admin-spacer-sm) var(--admin-spacer-md);
+        font-size: var(--admin-font-size-md);
+    }
 }

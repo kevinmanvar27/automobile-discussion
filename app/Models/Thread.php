@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Comment;
 use App\Models\ThreadImage;
@@ -18,6 +19,9 @@ class Thread extends Model
         'subject',
         'description'
     ];
+    
+    // Property to hold the user rating
+    private $userRatingValue = null;
 
     public function user()
     {
@@ -46,7 +50,24 @@ class Thread extends Model
     
     public function getUserRatingAttribute()
     {
-        // This will be set dynamically when needed
+        // If userRatingValue is set, return it
+        if ($this->userRatingValue !== null) {
+            return $this->userRatingValue;
+        }
+        
+        // Otherwise, try to get it from the ratings relationship
+        if (Auth::check() && $this->relationLoaded('ratings')) {
+            $userRating = $this->ratings->where('user_id', Auth::id())->first();
+            return $userRating ? $userRating->rating : 0;
+        }
+        
+        // Default to 0
         return 0;
+    }
+    
+    // Method to set the user rating value
+    public function setUserRating($rating)
+    {
+        $this->userRatingValue = $rating;
     }
 }
