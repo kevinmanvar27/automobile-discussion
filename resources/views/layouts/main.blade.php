@@ -158,6 +158,10 @@
                         <a href="{{ route('admin.dashboard') }}">Admin Dashboard</a>
                     @endif
                     <a href="{{ route('discussion.index') }}">Discussion</a>
+                    <a href="{{ route('notifications.index') }}" id="notifications-link">
+                        Notifications 
+                        <span id="notification-badge" class="badge bg-danger d-none"></span>
+                    </a>
                     <a href="{{ route('logout') }}" 
                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         Logout
@@ -206,5 +210,44 @@
     @yield('modals')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     @yield('scripts')
+    
+    @auth
+    <script>
+        // Function to update notification count
+        function updateNotificationCount() {
+            fetch('{{ route("notifications.unread-count") }}', {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const count = data.count;
+                const badge = document.getElementById('notification-badge');
+                
+                if (count > 0) {
+                    badge.textContent = count;
+                    badge.classList.remove('d-none');
+                } else {
+                    badge.classList.add('d-none');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching notification count:', error);
+            });
+        }
+        
+        // Update notification count on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateNotificationCount();
+            
+            // Update notification count every 30 seconds
+            setInterval(updateNotificationCount, 30000);
+        });
+    </script>
+    @endauth
 </body>
 </html>

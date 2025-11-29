@@ -11,6 +11,7 @@ use App\Models\CommentImage;
 
 class CommentController extends Controller
 {
+    use NotificationTrait;
     public function store(Request $request, Thread $thread)
     {
         // Check if user is authenticated
@@ -52,6 +53,25 @@ class CommentController extends Controller
 
             // Load the user relationship for the comment
             $comment->load('user');
+
+            // Notify admins about new comment
+            $this->notifyAdmins(
+                'comment_added',
+                'New comment added by ' . Auth::user()->name . ' on thread "' . $thread->subject . '"',
+                $comment->id,
+                'comment'
+            );
+            
+            // Notify thread owner (if it's not the same person commenting)
+            if ($thread->user_id != Auth::id()) {
+                $this->notifyUser(
+                    $thread->user_id,
+                    'comment_on_thread',
+                    'New comment added by ' . Auth::user()->name . ' on your thread "' . $thread->subject . '"',
+                    $comment->id,
+                    'comment'
+                );
+            }
 
             // If this is an AJAX request, return JSON
             if ($request->wantsJson() || $request->ajax()) {

@@ -11,6 +11,7 @@ use App\Models\ThreadRating;
 
 class ThreadController extends Controller
 {
+    use NotificationTrait;
     public function index(Request $request)
     {
         $query = Thread::with(['user', 'images', 'ratings'])->withCount('comments')->latest();
@@ -98,6 +99,14 @@ class ThreadController extends Controller
                     ]);
                 }
             }
+            
+            // Notify admins about new thread
+            $this->notifyAdmins(
+                'thread_created',
+                'New thread "' . $thread->subject . '" created by ' . Auth::user()->name,
+                $thread->id,
+                'thread'
+            );
 
             // If this is an AJAX request, return JSON
             if ($request->wantsJson() || $request->ajax()) {

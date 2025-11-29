@@ -7,6 +7,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ThreadImageController;
 use App\Http\Controllers\CommentImageController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\NotificationController;
 
 // Public routes
 Route::get('/', [AuthController::class, 'index'])->name('home');
@@ -23,6 +24,14 @@ Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail'])->
 Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Notification routes
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unread-count');
+});
 
 // Admin routes (protected by admin middleware)
 Route::middleware(['auth', App\Http\Middleware\EnsureAdminMiddleware::class])->prefix('admin')->group(function () {
