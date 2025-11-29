@@ -9,6 +9,24 @@ use App\Http\Controllers\CommentImageController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\NotificationController;
 
+//for symlink
+// use Illuminate\Support\Facades\Response;
+// use Illuminate\Support\Facades\Storage;
+
+// Route::get('storage/{filename}', function ($filename) {
+//     $path = storage_path('app/public/' . $filename);
+
+//     if (!file_exists($path)) {
+//         abort(404);
+//     }
+
+//     $file = file_get_contents($path);
+//     $type = mime_content_type($path);
+
+//     return Response::make($file, 200)->header("Content-Type", $type);
+// })->where('filename', '.*');
+//for symlink
+
 // Public routes
 Route::get('/', [AuthController::class, 'index'])->name('home');
 
