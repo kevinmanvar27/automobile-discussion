@@ -33,7 +33,7 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'shop_name' => 'required|string|max:255',
-            'mobile_no' => 'required|string|max:15',
+            'mobile_no' => 'required|numeric|digits:10',
             'email' => 'required|string|email|max:255|unique:users',
             'city' => 'required|string|max:255',
             'address' => 'required|string',

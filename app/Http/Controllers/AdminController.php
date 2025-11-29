@@ -98,7 +98,7 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'shop_name' => 'nullable|string|max:255',
-            'mobile_no' => 'nullable|string|max:20',
+            'mobile_no' => 'nullable|numeric|digits:10',
             'city' => 'nullable|string|max:100',
             'address' => 'nullable|string|max:500',
             'verified' => 'boolean',

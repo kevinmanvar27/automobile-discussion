@@ -895,21 +895,32 @@
         return 0;
     }
     
-    // Highlight stars up to the given rating
     function highlightStars(stars, rating, isHover = false) {
         stars.forEach((star, index) => {
-            if (index < rating) {
-                if (isHover) {
+
+            // HOVER MODE
+            if (isHover) {
+                // Remove only hover highlight
+                star.classList.remove('active');
+
+                // Add active only to hovered range
+                if (index < rating) {
                     star.classList.add('active');
-                    star.classList.remove('selected');
-                } else {
-                    star.classList.add('selected');
-                    star.classList.remove('active');
                 }
-            } else {
-                star.classList.remove('active', 'selected');
+                return; // prevent touching selected class
             }
+
+            // CLICK MODE (real selection)
+            if (index < rating) {
+                star.classList.add('selected');
+            } else {
+                star.classList.remove('selected');
+            }
+
+            // clean active from previous hover
+            star.classList.remove('active');
         });
     }
+
 </script>
 @endsection
