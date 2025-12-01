@@ -965,12 +965,12 @@ body {
     
     /* Header adjustments */
     .card-header {
-        flex-direction: column;
+        /* flex-direction: column; */
         gap: var(--spacer-sm);
     }
     
     .card-title {
-        text-align: center;
+        text-align: left;
         margin-bottom: var(--spacer-sm);
     }
     

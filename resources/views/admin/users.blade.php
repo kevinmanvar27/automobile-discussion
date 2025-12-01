@@ -6,43 +6,46 @@
         <h1 class="admin-card-title mb-0">All Users</h1>
     </div>
     <div class="admin-card-body">
-        <table id="usersTable" class="admin-table display p-3" style="width:100%">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Shop Name</th>
-                    <th>Mobile</th>
-                    <th>City</th>
-                    <th>Verified</th>
-                    <th>Created At</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($users as $key => $user)
+        <!-- Added wrapper div for horizontal scrolling -->
+        <div class="admin-table-responsive">
+            <table id="usersTable" class="admin-table display p-3" style="width:100%">
+                <thead>
                     <tr>
-                        <td>{{ $key + 1 }}</td>
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->shop_name }}</td>
-                        <td>{{ $user->mobile_no }}</td>
-                        <td>{{ $user->city }}</td>
-                        <td>{{ $user->verified ? 'Yes' : 'No' }}</td>
-                        <td>{{ $user->created_at->format('Y-m-d H:i') }}</td>
-                        <td>
-                            <button class="admin-btn admin-btn-info admin-btn-sm view-user" data-user-id="{{ $user->id }}"><i class="fas fa-eye"></i></button>
-                            <button class="admin-btn admin-btn-primary admin-btn-sm edit-user" data-user-id="{{ $user->id }}"><i class="fas fa-pen"></i></button>
-                            @if(!$user->verified)
-                                <form method="POST" action="{{ route('admin.generate-password', $user) }}" style="display: inline;">
-                                    @csrf
-                                    <button type="submit" class="admin-btn admin-btn-success admin-btn-sm">Generate Password</button>
-                                </form>
-                            @endif
-                        </td>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Shop Name</th>
+                        <th>Mobile</th>
+                        <th>City</th>
+                        <th>Verified</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach($users as $key => $user)
+                        <tr>
+                            <td>{{ $key + 1 }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->shop_name }}</td>
+                            <td>{{ $user->mobile_no }}</td>
+                            <td>{{ $user->city }}</td>
+                            <td>{{ $user->verified ? 'Yes' : 'No' }}</td>
+                            <td>{{ $user->created_at->format('Y-m-d H:i') }}</td>
+                            <td>
+                                <button class="admin-btn admin-btn-info admin-btn-sm view-user" data-user-id="{{ $user->id }}"><i class="fas fa-eye"></i></button>
+                                <button class="admin-btn admin-btn-primary admin-btn-sm edit-user" data-user-id="{{ $user->id }}"><i class="fas fa-pen"></i></button>
+                                @if(!$user->verified)
+                                    <form method="POST" action="{{ route('admin.generate-password', $user) }}" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="admin-btn admin-btn-success admin-btn-sm">Generate Password</button>
+                                    </form>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

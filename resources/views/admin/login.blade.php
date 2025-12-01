@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 
 @section('admin-content')
-<div class="d-flex align-items-center justify-content-center min-vh-100">
-    <div class="card mx-auto" style="width: 500px !important;">
+<div class="d-flex align-items-center justify-content-center min-vh-100 admin-login-container">
+    <div class="card w-100" style="max-width: 500px;">
         <!-- Header -->
         <div class="admin-card-header">
             <h1 class="admin-card-title text-center mb-0">Admin Login</h1>
@@ -10,7 +10,7 @@
 
         <!-- Body -->
         <div class="admin-card-body">
-            <form method="POST" action="{{ route('admin.login') }}">
+            <form method="POST" action="{{ route('admin.login') }}" class="admin-login-form">
                 @csrf
 
                 <!-- Email -->

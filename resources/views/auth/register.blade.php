@@ -3,7 +3,7 @@
 @section('content')
 <div class="card mx-auto auth-form-card" style="max-width: 600px; margin-top: 2rem; margin-bottom: 2rem;">
     <div class="card-header auth-form-header text-white text-center">
-        <h1 class="card-title mb-0">Register</h1>
+        <h1 class="card-title mb-0 text-white text-center">Register</h1>
     </div>
     <div class="card-body">
     

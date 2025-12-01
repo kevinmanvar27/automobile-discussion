@@ -5,11 +5,10 @@
     <div class="card-header d-flex justify-content-between align-items-center">
         
         <!-- LEFT: Title -->
-        <h1 class="card-title mb-0">Discussion Forum</h1>
+        <h1 class="card-title mb-0">Discussion</h1>
 
         <!-- RIGHT: Search + New Thread -->
-        <div class="d-flex align-items-center gap-2">
-
+        <div class="d-flex align-items-center p-0">
             <!-- Search Form -->
             <form method="GET" action="{{ route('discussion.index') }}" id="searchForm" class="me-2">
                 <div class="input-group">

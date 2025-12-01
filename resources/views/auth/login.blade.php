@@ -3,10 +3,10 @@
 @section('content')
 <div class="card mx-auto auth-form-card" style="max-width: 500px; margin-top: 2rem; margin-bottom: 2rem;">
     <div class="card-header auth-form-header text-white text-center">
-        <h1 class="card-title mb-0">User Login</h1>
+        <h1 class="card-title mb-0 text-white text-center">User Login</h1>
     </div>
     <div class="card-body">
-    
+        
     <form method="POST" action="{{ route('login') }}">
         @csrf
         

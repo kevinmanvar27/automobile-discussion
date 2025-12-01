@@ -79,6 +79,47 @@
             background-color: rgba(255, 107, 0, 0.1);
         }
         
+        /* Responsive Header */
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #495057;
+        }
+        
+        @media (max-width: 767px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: #ffffff;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem;
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+                z-index: 100;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links a {
+                margin: 0.25rem 0;
+                padding: 0.75rem 1rem;
+                width: 100%;
+                border-radius: 0.25rem;
+            }
+            
+            .mobile-toggle {
+                display: block;
+            }
+        }
+        
         .main-content {
             min-height: calc(100vh - 200px);
         }
@@ -126,7 +167,7 @@
         }
         
         .card-header {
-            padding: 1rem 1.25rem;
+            /* padding: 1rem 1.25rem; */
             border-bottom: 1px solid #e9ecef;
             border-radius: 0.5rem 0.5rem 0 0;
         }
@@ -147,11 +188,14 @@
 </head>
 <body data-authenticated="{{ Auth::check() ? 'true' : 'false' }}">
     <header class="header">
-        <div class="container header-content">
+        <div class="container d-flex align-items-center justify-content-between">
             <a href="{{ route('home') }}" class="logo">
                 <img src="{{ asset('images/car-tech.png') }}" alt="Auto Discuss Logo" class="logo-img">
             </a>
-            <nav class="nav-links">
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="nav-links" id="navLinks">
                 @auth
                     @yield('header-nav-items')
                     @if(Auth::user()->email === 'rektech.uk@gmail.com')
@@ -249,5 +293,52 @@
         });
     </script>
     @endauth
+    
+    <script>
+        // Mobile navigation toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileToggle = document.getElementById('mobileToggle');
+            const navLinks = document.getElementById('navLinks');
+            
+            if (mobileToggle && navLinks) {
+                mobileToggle.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                    
+                    // Toggle icon between bars and times
+                    const icon = mobileToggle.querySelector('i');
+                    if (navLinks.classList.contains('active')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    const isClickInsideNav = navLinks.contains(event.target);
+                    const isClickOnToggle = mobileToggle.contains(event.target);
+                    
+                    if (!isClickInsideNav && !isClickOnToggle && navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
+                        const icon = mobileToggle.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+                
+                // Close menu when resizing to larger screen
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth > 767 && navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
+                        const icon = mobileToggle.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

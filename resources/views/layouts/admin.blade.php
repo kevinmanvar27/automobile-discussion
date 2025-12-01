@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Admin - Automobile Discussion Forum</title>
     <!-- Include the custom admin CSS -->
@@ -26,24 +26,62 @@
         }
         
         .logo-img {
-            height: 120px;
+            height: 80px;
             width: auto;
+            max-width: 100%;
+        }
+        
+        /* Responsive Header */
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #495057;
+        }
+        
+        @media (max-width: 767px) {
+            .admin-nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: #ffffff;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem;
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+                z-index: 100;
+            }
+            
+            .admin-nav-links.active {
+                display: flex;
+            }
+            
+            .admin-nav-links a {
+                margin: 0.25rem 0;
+                padding: 0.75rem 1rem;
+                width: 100%;
+                border-radius: 0.25rem;
+            }
+            
+            .mobile-toggle {
+                display: block;
+            }
         }
         
     </style>
 </head>
 <body>
     <div class="admin-container">
-        <!-- Mobile sidebar toggle button -->
-        <button class="sidebar-toggle" id="sidebarToggle">
-            <i class="fas fa-bars"></i>
-        </button>
         
         @auth
         <aside class="admin-sidebar" id="adminSidebar">
-            <div class="admin-sidebar-header justify-content-center">
+            <div class="admin-sidebar-header justify-content-center" style="padding-top: 80px;">
                 <a href="{{ route('admin.dashboard') }}" class="logo">
-                    <img src="{{ asset('images/car-tech.png') }}" alt="Auto Discuss Logo" class="logo-img">
+                    <img src="{{ asset('images/car-tech.png') }}" alt="Auto Discuss Logo" class="logo-img" style="max-width: 100%; height: auto;">
                 </a>
                 <!-- Close button for mobile sidebar -->
                 <button class="sidebar-toggle-close" id="sidebarClose">
@@ -51,8 +89,16 @@
                 </button>
             </div>
             <ul class="admin-sidebar-menu">
-                <li><a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><span class="menu-icon">📊</span> Dashboard</a></li>
-                <li><a href="{{ route('admin.users') }}" class="{{ request()->routeIs('admin.users') ? 'active' : '' }}"><span class="menu-icon">👥</span> All Users</a></li>
+                <li><a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a></li>
+                <li><a href="{{ route('admin.users') }}" class="{{ request()->routeIs('admin.users') ? 'active' : '' }}">All Users</a></li>
+                <!-- Moved header navigation links to sidebar for mobile -->
+                <li class="admin-sidebar-nav-links">
+                    <a href="{{ route('home') }}">Frontend</a>
+                    <a href="{{ route('logout') }}" 
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        Logout
+                    </a>
+                </li>
             </ul>
         </aside>
         @endauth
@@ -63,24 +109,15 @@
         @endphp
         <main class="{{ $mainClass }}">
             @auth
-                <header class=" {{ $classHeader }}">
+                <header class="d-flex justify-content-between align-items-center {{ $classHeader }}">
+                    <div class="admin-header-content">
+                        <!-- Mobile sidebar toggle button -->
+                        <button class="sidebar-toggle" id="sidebarToggle">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
                     <div class="admin-header-content">
                         <a href="{{ route('admin.dashboard') }}" class="admin-logo">ADMIN PANEL</a>
-                        <nav class="admin-nav-links">
-                            @auth
-                                <a href="{{ route('home') }}">Frontend</a>
-                                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                                <a href="{{ route('logout') }}" 
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    Logout
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    @csrf
-                                </form>
-                            @else
-                                <a href="{{ route('admin.login') }}">Login</a>
-                            @endauth    
-                        </nav>
                     </div>
                 </header>
             @endauth
@@ -138,6 +175,49 @@
                     adminSidebar.classList.remove('active');
                 }
             });
+            
+            // Mobile navigation toggle for admin header
+            const adminMobileToggle = document.getElementById('adminMobileToggle');
+            const adminNavLinks = document.getElementById('adminNavLinks');
+            
+            if (adminMobileToggle && adminNavLinks) {
+                adminMobileToggle.addEventListener('click', function() {
+                    adminNavLinks.classList.toggle('active');
+                    
+                    // Toggle icon between bars and times
+                    const icon = adminMobileToggle.querySelector('i');
+                    if (adminNavLinks.classList.contains('active')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    const isClickInsideNav = adminNavLinks.contains(event.target);
+                    const isClickOnToggle = adminMobileToggle.contains(event.target);
+                    
+                    if (!isClickInsideNav && !isClickOnToggle && adminNavLinks.classList.contains('active')) {
+                        adminNavLinks.classList.remove('active');
+                        const icon = adminMobileToggle.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+                
+                // Close menu when resizing to larger screen
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth > 767 && adminNavLinks.classList.contains('active')) {
+                        adminNavLinks.classList.remove('active');
+                        const icon = adminMobileToggle.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            }
         });
     </script>
 </body>
