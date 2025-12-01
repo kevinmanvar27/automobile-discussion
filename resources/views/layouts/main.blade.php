@@ -198,7 +198,7 @@
             <nav class="nav-links" id="navLinks">
                 @auth
                     @yield('header-nav-items')
-                    @if(Auth::user()->email === 'rektech.uk@gmail.com')
+                    @if(Auth::user()->email === 'madhuram.motors@gmail.com')
                         <a href="{{ route('admin.dashboard') }}">Admin Dashboard</a>
                     @endif
                     <a href="{{ route('discussion.index') }}">Discussion</a>

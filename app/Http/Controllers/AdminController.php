@@ -34,7 +34,7 @@ class AdminController extends Controller
             
             // Check if the user is the admin (by email)
             $user = Auth::user();
-            if ($user->email === 'rektech.uk@gmail.com') {
+            if ($user->email === 'madhuram.motors@gmail.com') {
                 return redirect()->intended('/admin/dashboard');
             } else {
                 // If not admin, logout and redirect back

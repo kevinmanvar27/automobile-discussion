@@ -22,7 +22,7 @@ class EnsureAdminMiddleware
         }
 
         // Check if the authenticated user is the admin
-        if (Auth::user()->email !== 'rektech.uk@gmail.com') {
+        if (Auth::user()->email !== 'madhuram.motors@gmail.com') {
             return redirect()->route('login');
         }
 
