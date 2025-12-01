@@ -137,4 +137,14 @@ class AdminController extends Controller
         
         return back()->with('success', 'Password generated and email sent to user.');
     }
+
+    public function usersByComments()
+    {
+        // Get users with their comment counts, ordered by comment count descending
+        $users = User::withCount('comments')
+                    ->orderBy('comments_count', 'desc')
+                    ->get();
+        
+        return view('admin.users-by-comments', compact('users'));
+    }
 }

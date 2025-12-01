@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', App\Http\Middleware\EnsureAdminMiddleware::class])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('/users/comments', [AdminController::class, 'usersByComments'])->name('admin.users.comments');
     Route::get('/users/{user}', [AdminController::class, 'viewUser'])->name('admin.users.view');
     Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
     Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update');

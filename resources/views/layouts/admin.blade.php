@@ -91,6 +91,7 @@
             <ul class="admin-sidebar-menu">
                 <li><a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a></li>
                 <li><a href="{{ route('admin.users') }}" class="{{ request()->routeIs('admin.users') ? 'active' : '' }}">All Users</a></li>
+                <li><a href="{{ route('admin.users.comments') }}" class="{{ request()->routeIs('admin.users.comments') ? 'active' : '' }}">Users by Comments</a></li>
                 <!-- Moved header navigation links to sidebar for mobile -->
                 <li class="admin-sidebar-nav-links">
                     <a href="{{ route('home') }}">Frontend</a>
@@ -116,7 +117,7 @@
                             <i class="fas fa-bars"></i>
                         </button>
                     </div>
-                    <div class="admin-header-content">
+                    <div class="admin-header-content ">
                         <a href="{{ route('admin.dashboard') }}" class="admin-logo">ADMIN PANEL</a>
                     </div>
                 </header>
@@ -220,5 +221,7 @@
             }
         });
     </script>
+    
+    @stack('scripts')
 </body>
 </html>
